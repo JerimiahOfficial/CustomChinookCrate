@@ -34,14 +34,14 @@ namespace Oxide.Plugins {
             });
         }
 
-        [Command("Drop")]
+        [Command("Drop"), Permission("CustomChinookCrate.drop")]
         private void Drop() {
             Puts(": Dropping a crate.");
             HackableLockedCrate Crate = GameManager.server.CreateEntity("assets/prefabs/deployable/chinooklockedcrate/codelockedhackablecrate.prefab", new Vector3(dropPos.x, 16f, dropPos.z)) as HackableLockedCrate;
             Crate.Spawn();
         }
 
-        [Command("Call")]
+        [Command("Call"), Permission("CustomChinookCrate.call")]
         private void Call() {
             Puts(": Calling Chinook.");
             Chinook();
