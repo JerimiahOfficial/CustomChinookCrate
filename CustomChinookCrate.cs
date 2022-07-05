@@ -110,19 +110,5 @@ namespace Oxide.Plugins {
                 Puts(": Chinook was killed.");
             }
         }
-
-        private void OnPluginUnloaded(Plugin name) {
-            Puts(": Killing Chinooks.");
-            CustomChinook.Kill();
-            CustomChinook = null;
-            Puts(": Unloaded.");
-        }
-
-        private void OnServerShutdown() {
-            Puts(": Killing Chinooks.");
-            CustomChinook.Kill();
-            CustomChinook = null;
-            Puts(": Unloaded.");
-        }
     }
 }
