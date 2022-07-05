@@ -22,8 +22,8 @@ namespace Oxide.Plugins {
     [Description("Drops a crate at the specified coordinates.")]
     internal class CustomChinookCrate : CovalencePlugin {
         private CH47HelicopterAIController CustomChinook;
-        private Vector3 SpawnLocation;
         private Vector3 dropPos = new Vector3(0, 0, 0);
+        private Vector3 SpawnLocation;
 
         private void Init() {
             timer.Every(3600, () => {
@@ -71,21 +71,21 @@ namespace Oxide.Plugins {
             if (CustomChinook == null)
                 return;
 
-            if (CustomChinook.numCrates == 0) {
-                CustomChinook._moveTarget = SpawnLocation;
-
-                if (Vector3Ex.Distance2D(CustomChinook.GetPosition(), SpawnLocation) < 15) {
-                    Puts(": Chinook has left.");
-                    CustomChinook.Kill();
-                }
-            }
+            CustomChinook._aimDirection = (CustomChinook.numCrates == 1 ? dropPos : SpawnLocation);
+            CustomChinook._moveTarget = (CustomChinook.numCrates == 1 ? dropPos : SpawnLocation);
 
             if (CustomChinook.numCrates != 0) {
-                CustomChinook._moveTarget = dropPos;
-
                 if (Vector3Ex.Distance2D(CustomChinook.GetPosition(), dropPos) < 15) {
                     Puts(": Chinook has reached destination.");
                     CustomChinook.DropCrate();
+                }
+            }
+
+            if (CustomChinook.numCrates == 0) {
+                if (Vector3Ex.Distance2D(CustomChinook.GetPosition(), SpawnLocation) < 15) {
+                    Puts(": Chinook has left.");
+                    CustomChinook.Kill();
+                    CustomChinook = null;
                 }
             }
         }
@@ -102,8 +102,10 @@ namespace Oxide.Plugins {
         }
 
         private void OnEntityKill(CH47HelicopterAIController chinook) {
-            if (chinook == CustomChinook)
+            if (chinook == CustomChinook) {
                 CustomChinook = null;
+                Puts(": Chinook was killed.");
+            }
         }
 
         private void OnPluginUnloaded(Plugin name) {
